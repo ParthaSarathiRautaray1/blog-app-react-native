@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import { useAppDispatch } from "@/hooks/redux";
 import { useLoginMutation } from "@/features/auth/authApi";
 import { setCredentials } from "@/features/auth/authSlice";
+import { authStorage } from "@/features/auth/authStorage";
 
 
 export default function Login() {
@@ -21,6 +22,9 @@ export default function Login() {
                 email,
                 password,
             }).unwrap();
+
+           await authStorage.setToken(response.token);
+           await authStorage.setUser(response.user); 
 
             dispatch(
                 setCredentials({

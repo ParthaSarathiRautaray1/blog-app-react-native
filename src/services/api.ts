@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, RootState } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
     reducerPath: "api",
@@ -7,7 +7,7 @@ export const api = createApi({
         baseUrl: process.env.EXPO_PUBLIC_API_URL,
         
         prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as { auth: { token: string | null } }).auth.token;
+            const token = (getState() as RootState).auth.token;
 
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);

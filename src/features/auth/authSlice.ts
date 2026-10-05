@@ -2,6 +2,8 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { User } from "./types";
+import * as SecureStore from "expo-secure-store";
+
 
 interface AuthState {
     user: User | null;
@@ -30,12 +32,28 @@ const authSlice = createSlice({
             state.user = action.payload.user;
             state.token = action.payload.token;
             state.isAuthenticated = true;
+
+            // securely store like tokens
+            SecureStore.setItemAsync(
+                "auth_token",
+                action.payload.token
+            );
+
+            SecureStore.setItemAsync(
+                "auth_user",
+                JSON.stringify(action.payload.user)
+            );
+            
         },
 
         logout: (state) => {
             state.user = null;
             state.token = null;
             state.isAuthenticated = false;
+
+            // while logout delete those token 
+            SecureStore.deleteItemAsync("auth_token");
+            SecureStore.deleteItemAsync("auth_user");
         },
     },
 });
